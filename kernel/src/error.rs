@@ -13,6 +13,8 @@ use crate::Version;
 /// A [`std::result::Result`] that has the kernel [`Error`] as the error variant
 pub type DeltaResult<T, E = Error> = std::result::Result<T, E>;
 
+// shoumik was here.
+
 /// All the types of errors that the kernel can run into
 #[derive(thiserror::Error, Debug)]
 pub enum Error {
