@@ -530,7 +530,22 @@ mod tests {
             .as_map();
 
         // The map should have 3 entries: mode, statsOnLoad, numRetries
-        assert_eq!(op_params.value(0).len(), 3);
+        let map_entries = op_params.value(0);
+        assert_eq!(map_entries.len(), 3);
+
+        // Extract keys and values from the map
+        let keys = map_entries.column(0).as_string::<i32>();
+        let values = map_entries.column(1).as_string::<i32>();
+
+        // Build a HashMap for easier lookup
+        let params: std::collections::HashMap<_, _> = (0..keys.len())
+            .map(|i| (keys.value(i), values.value(i)))
+            .collect();
+
+        // Verify coerced primitive values: boolean false -> "false", integer 5 -> "5"
+        assert_eq!(params.get("statsOnLoad"), Some(&"false"));
+        assert_eq!(params.get("numRetries"), Some(&"5"));
+        assert_eq!(params.get("mode"), Some(&"ErrorIfExists"));
     }
 
     #[test]
